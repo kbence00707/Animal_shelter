@@ -1,26 +1,17 @@
 1. Mit lát egy látogató egy állatról?
-   - Azonosító (id) – egyedi szám, a látogató nem látja, de minden foglalás erre hivatkozik (új)
    - Név
+   - Neme
    - Születési dátum
    - Életkor (a születési dátumból számolható)
    - Állat típusa (pl. kutya, macska)
    - Fajta
-   - Nem (hím / nőstény) (új)
    - Egy vagy több kép az állatról
-     -> több kép lesz: egy állathoz több kép tartozik, ezért a képek külön táblába kerülnek (új)
-   - Súly (mértékegység: kg) (új: mértékegység)
-   - Magasság (mértékegység: cm) (új: mértékegység)
+   - Súly
+   - Magasság
    - Mikor került be az állatmenhelyre
    - Van-e benne chip
    - Fontos dokumentumok
-     -> a látogató is látja; egy állathoz több dokumentum tartozhat, ezért külön táblába kerülnek (új)
-     -> feltöltés előtt ellenőrizni kell, hogy nincs-e benne személyes adat (pl. előző gazdi neve, címe) (új)
-   - Megjegyzés -> nyilvános leírás, a látogató is látja (pl. "barátságos, szereti a gyerekeket")
-   - Örökbefogadási állapot (új):
-       örökbefogadható / foglalt / örökbefogadva
-       -> a látogató csak az örökbefogadható (és esetleg a foglalt) állatokat lássa
-       -> csak örökbefogadható állatra lehessen időpontot foglalni
-       -> örökbefogadás után ne töröljük az állatot, hanem állítsuk "örökbefogadva" állapotra
+   - Megjegyzés
 
 2. Milyen adatokat küld jelenleg a foglalási űrlap?
    - Látogató neve (visitor_name)
@@ -29,24 +20,8 @@
    - Foglalás dátuma (booking_date)
    - Foglalás időpontja (booking_time)
 
-   Megjegyzés: az animalselect az állat AZONOSÍTÓJÁT (id) küldi, nem a nevét (új)
-
    Tervezett további mező:
    - Telefonszám (a jelenlegi űrlapban még nincs hozzá mező/id)
-     -> a backend nem kötelező mezőként fogadja, ha nincs kitöltve, üresen marad (új)
-   - Üzenet a látogatótól, nem kötelező (pl. "két gyerekkel érkezünk") (új)
-
-   Amit nem az űrlap küld, de a foglaláshoz tárolni kell (új):
-   - Azonosító (id)
-   - Foglalás állapota: függőben / megerősítve / teljesítve / lemondva
-   - Mikor történt a foglalás (automatikusan)
-
-   Szabályok, amiket a backendnek ellenőriznie kell (új):
-   - a dátum nem lehet a múltban
-   - az időpont a nyitvatartási időn belül legyen (nyitvatartás: 6:00 - 18:00)
-   - csak örökbefogadható állatra lehet foglalni
-   - ugyanarra az állatra ugyanarra a dátumra és időpontra nem lehet kétszer foglalni
-   - kötelező mezők: név, e-mail, állat, dátum, időpont; az e-mail cím legyen érvényes
 
 3. Mire van szüksége a dolgozónak?
    - Be tudjon jelentkezni a dolgozói felületre
@@ -61,20 +36,3 @@
    - Ha később hozzáadjuk a telefonszám mezőt, azt is lássa
    - Lássa a foglalás dátumát és időpontját
    - Szükség esetén tudja módosítani vagy törölni a foglalást
-   - Ki tudjon jelentkezni (új)
-   - Egy kattintással tudja módosítani a foglalás állapotát (megerősít / lemond) (új)
-   - Szűrni tudja a foglalásokat: csak a közelgők, vagy az összes a múltbeliekkel együtt (új)
-   - Az állatot "örökbefogadva" állapotra tudja állítani törlés helyett (új)
-   - Képeket és dokumentumokat tudjon feltölteni és törölni egy állathoz (új)
-   - Dolgozói fiókot csak adminisztrátor hozhat létre, nincs nyilvános regisztráció (új)
-
-4. KÖZÖS NEVEK ÉS DÖNTÉSEK (amiben megegyeztünk)
-   Eldöntve:
-   - Képek: egy állathoz TÖBB kép tartozhat
-   - Dokumentumok: a látogató is láthatja őket
-   - Megjegyzés: nyilvános leírás, a látogató is látja
-   - Táblák és oszlopok nevei: MAGYARUL, de ékezetek és szóközök nélkül,
-     kisbetűvel, alulvonással (pl. allatok, szuletesi_datum, latogato_nev)
-   - Nyitvatartás (látogatási időpontok): 6:00 - 18:00
-   - Feltölthető fájltípusok: JPG és PNG (a dokumentumok is képként, pl. beszkennelve)
-   - Egy fájl mérete legfeljebb 5 MB
