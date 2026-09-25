@@ -15,20 +15,21 @@
             <nav>
                 <a href="#animal">Állatok</a>
                 <a href="#time">Időpontfoglalás</a>
-                <a href="login">Dolgozói felület</a>
-                <a href="adminlogin">Vezetőségi felület</a>
+                <a href="#contact">Kapcsolat</a>
+                <a href="login.html">Bejelentkezés</a>
             </nav>
         </div>
     </header>
 
     <main>
         <section class="intro">
-            <div class="intro-contant">
-                <div>
-                    <span class="maintitle"> Adj neki egy új esélyt</span>
-                    <h1>Találd meg az új társadat ezen a helyen</h1>
-                    <p>Keres az oldalon élő állatok között és amint megtaláltalad az új tárasad, majd ne fél időpontott foglani, hogy személyesen is tud találkozni vele.</p>
-                    <a class="button" href="#animal">Állatok megtekintése</a>                </div>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <span class="maintitle">Adj nekik egy új esélyt!</span>
+                    <h1>Találd meg nálunk új társad!</h1>
+                    <p>Böngéssz gazdira váró állataink között, és ha megtaláltad az igazit, foglalj bátran időpontot, hogy személyesen is megismerkedhessetek!</p>
+                    <a class="button" href="#animal">Állatok megtekintése</a>
+                </div>
                 <div class="intro_img">
                     <img src="pictures/kutya.jpg" alt="Kutya">
                 </div>
@@ -44,8 +45,22 @@
                         </span>
                         <h2>Gazdira váró állatok</h2>
                     </div>
-                    <div class="filter"><input class="search" type="search" placeholder="Keresés név alapján">
-                    <select id="typefilter"><option value="all">Minden állat</option><option value="dogs">Kutyák</option><option value="cats">Macskák</option><option value="other">Kiskedvencek</option></select>
+                    <div class="filter">
+                        <input class="search" type="search" placeholder="Keresés... ">
+                        <select id="typefilter">
+                            <option value="all">Minden faj</option>
+                            <option value="dogs">Kutyák</option>
+                            <option value="cats">Macskák</option>
+                            <option value="other">További Kiskedvencek</option>
+                        </select>
+                        <select id="sortfilter">
+                            <option value="default">Rendezés...</option>
+                            <option value="species">Faj szerint</option>
+                            <option value="birth_asc">Születési év (legfiatalabb)</option>
+                            <option value="birth_desc">Születési év (legidősebb)</option>
+                            <option value="name_asc">Név (A-Z)</option>
+                            <option value="name_desc">Név (Z-A)</option>
+                        </select>
                     </div>
                 </div>
                 <div id="animals_grid" class="animals_container_grid">
@@ -55,25 +70,62 @@
 
         <section id="time" class="time_container_light">
             <div class="time_container_layout">
-                <div>
+                <div class="meeting_text">
                     <span class="meeting_title">Személyes találkozó</span>
                     <h2>Időpontfoglalás</h2>
-                    <p>Válaszon ki egy önnek megfelő időpontot és a választot kis kedvencét. A foglalás után a munkatársaink látni fogják önt a rendszerben és várni fogják önt.</p>
+                    <p>Válaszd ki a számodra megfelelő időpontot és azt a kiskedvencet, akivel szeretnél találkozni. A foglalás elküldése után munkatársaink rögzítik a kérést, és szeretettel várnak a megbeszélt időpontban!</p>
                 </div>
-                    <form id="booking" class="booking_form">
-                        <label>Neve <input id="visitor_name" type="text" required></label>
-                        <label>E-mail <input id="visitor_email" type="email" required></label>
-                        <label>Választott állat <select id="animalselect" required> <option value="">Válassz állatot</option></select></label>
-                        <div class="column_two">
-                            <label>Dátum <input id="booking_date" type="date" required></label>
-                            <label>időpont <input id="booking_time" type="time" required></label>
-                        </div>
-                        <button class="button" type="submit">Időpont lefoglalása</button>
-                        <p id="booking_message" class="message"></p>
-                    </form>
+                <form id="booking" class="booking_form">
+                    <label>Név 
+                        <input id="visitor_name" type="text" placeholder="pl. Kiss János" required>
+                    </label>
+                    
+                    <label>E-mail cím 
+                        <input id="visitor_email" type="email" placeholder="pl. pelda@email.hu" required>
+                    </label>
+                    
+                    <label>Telefonszám 
+                        <input id="visitor_phone" type="tel" placeholder="pl. +36 30 123 4567" required>
+                    </label>
+                    
+                    <label>Választott állat 
+                        <select id="animalselect" required> 
+                            <option value="">Válassz állatot</option>
+                        </select>
+                    </label>
+                    
+                    <div class="column_two">
+                        <label>Dátum <input id="booking_date" type="date" required></label>
+                        <label>Időpont <input id="booking_time" type="time" required></label>
+                    </div>
+                    
+                    <button class="button" type="submit">Időpont lefoglalása</button>
+                    <p id="booking_message" class="message"></p>
+                </form>
             </div>
         </section>
     </main>
+
+    <footer id="contact" class="site_footer">
+        <div class="footer_container">
+            <div class="footer_section">
+                <h3>Kapcsolat és Cím</h3>
+                <p>📍 <strong>Cím:</strong> 9342 Mihályi, Korona utca 1.</p>
+                <p>📞 <strong>Telefon:</strong> +36 96 123 456</p>
+                <p>✉️ <strong>E-mail:</strong> info@mihalyimenhely.hu</p>
+            </div>
+            <div class="footer_section">
+                <h3>Nyitvatartás</h3>
+                <p><strong>Hétfő - Péntek:</strong> 08:00 - 16:00</p>
+                <p><strong>Szombat:</strong> 09:00 - 12:00</p>
+                <p><strong>Vasárnap:</strong> Zárva</p>
+            </div>
+        </div>
+        <div class="footer_bottom">
+            <p>&copy; 2026 Állatmenhely Mihályi. Minden jog fenntartva.</p>
+        </div>
+    </footer>
+
     <div id="cenzur" class="cenzur"></div>
     <script src="script.js"></script>
 </body>

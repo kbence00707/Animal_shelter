@@ -61,7 +61,7 @@ nav a:hover {
     padding: 80px 20px;
 }
 
-.intro-contant {
+.intro-content {
     max-width: 1200px;
     margin: 0 auto;
 
@@ -176,13 +176,17 @@ nav a:hover {
 
     font-size: 36px;
 }
+
+/* Szűrők bővítése */
 .filter {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap; /* Hogy kiférjenek kisebb képernyőn is */
 }
 
 .search,
-#typefilter {
+#typefilter,
+#sortfilter {
     padding: 12px 15px;
 
     border: 1px solid #cccccc;
@@ -197,9 +201,11 @@ nav a:hover {
     width: 220px;
 }
 
-#typefilter {
-    width: 150px;
+#typefilter,
+#sortfilter {
+    width: 170px; /* Kicsit szélesebb, hogy kiférjen a szöveg */
 }
+
 .animals_container_grid {
     display: grid;
 
@@ -335,6 +341,12 @@ nav a:hover {
 
     border-color: #4f7d4f;
 }
+
+/* Invalid mezők jelzése (piros szegély, ha hibás a bevitel) */
+.booking_form input:focus:invalid {
+    border-color: #e74c3c;
+}
+
 .column_two {
     display: grid;
 
@@ -342,9 +354,47 @@ nav a:hover {
 
     gap: 15px;
 }
+
+/* ÚJ: Lábléc formázása */
+.site_footer {
+    background-color: #2f3d2f;
+    color: #f1f6f1;
+    padding: 50px 20px 20px 20px;
+}
+
+.footer_container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 40px;
+    border-bottom: 1px solid #4f7d4f;
+    padding-bottom: 30px;
+}
+
+.footer_section h3 {
+    color: #8cbf8c;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.footer_section p {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.footer_bottom {
+    text-align: center;
+    padding-top: 20px;
+    font-size: 14px;
+    color: #a3c4a3;
+}
+
+
 @media (max-width: 900px) {
 
-    .intro-contant {
+    .intro-content {
         flex-direction: column;
 
         text-align: center;
@@ -412,7 +462,8 @@ nav a:hover {
     }
 
     .search,
-    #typefilter {
+    #typefilter,
+    #sortfilter {
         width: 100%;
     }
 
@@ -431,4 +482,59 @@ nav a:hover {
     .column_two {
         grid-template-columns: 1fr;
     }
+    
+    .footer_container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+.login_page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f1f6f1;
+}
+
+.login_main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.login_card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.login_card h2 {
+    color: #2f3d2f;
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+
+.login_card p {
+    color: #666666;
+    margin-bottom: 25px;
+}
+
+.login_card .booking_form {
+    box-shadow: none; 
+    padding: 0;
+    text-align: left;
+}
+
+.login_card .button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 15px;
+    font-size: 18px;
 }

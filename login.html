@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bejelentkezés</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login_page">
+    <header>
+        <div class="navigation">
+            <div class="brandname">
+                <span>Állatmenhely</span>
+            </div>
+            <nav>
+                <a href="index.html">Vissza a főoldalra</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="login_main">
+        <div class="login_card">
+            <h2>Munkatársi Bejelentkezés</h2>
+            <p>Kérjük, add meg a belépési adataidat!</p>
+            
+            <form id="login_form" class="booking_form">
+                <label>E-mail cím 
+                    <input id="login_email" type="email" placeholder="pl. nev@mihalyimenhely.hu" required>
+                </label>
+                
+                <label>Jelszó 
+                    <input id="login_password" type="password" placeholder="Jelszó megadása" required>
+                </label>
+                
+                <button class="button" type="submit">Belépés</button>
+                <p id="login_message" class="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer class="site_footer">
+        <div class="footer_bottom">
+            <p>&copy; 2026 Állatmenhely Mihályi. Minden jog fenntartva.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
