@@ -177,11 +177,11 @@ nav a:hover {
     font-size: 36px;
 }
 
-/* Szűrők bővítése */
+
 .filter {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap; /* Hogy kiférjenek kisebb képernyőn is */
+    flex-wrap: wrap; 
 }
 
 .search,
@@ -203,7 +203,7 @@ nav a:hover {
 
 #typefilter,
 #sortfilter {
-    width: 170px; /* Kicsit szélesebb, hogy kiférjen a szöveg */
+    width: 170px; 
 }
 
 .animals_container_grid {
@@ -342,7 +342,7 @@ nav a:hover {
     border-color: #4f7d4f;
 }
 
-/* Invalid mezők jelzése (piros szegély, ha hibás a bevitel) */
+
 .booking_form input:focus:invalid {
     border-color: #e74c3c;
 }
@@ -355,7 +355,6 @@ nav a:hover {
     gap: 15px;
 }
 
-/* ÚJ: Lábléc formázása */
 .site_footer {
     background-color: #2f3d2f;
     color: #f1f6f1;

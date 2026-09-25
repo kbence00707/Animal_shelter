@@ -1,18 +1,18 @@
 Frissítési napló: Frontend (2026.09.25)
 
-1. HTML rész(main.html)
+1. HTML rész(index.html)
 - Nyelvtani hibák javítása
 - Bekerült egy új rendezési legördülő menü (Faj, Születési év, Név szerinti rendezéshez).
 - Bekerült a Telefonszám beviteli mező.
 - Kapcsolat szekció hozzáadása a fiktív címmel, telefonnal, e-maillel és nyitvatartási idővel.
 - Bekerült a Kapcsolat gomb a menübe, a dolgozói/vezetőségi belépési egybeolvasztottam (későbbiekben külön url re gondolok, hogy a felhasználókat ne zavarjuk).
 
-2. CSS rész (main.css)
+2. CSS rész (style.css)
 - A szűrőmezőkúj rendezési mező dormázása.
 - Kaplcsolatok rész formázása
 - A login.html-hez tartozó dizájn hozzáadása.
 
-3. JAVASCRIPT rész (main.js)
+3. JAVASCRIPT rész (script.js)
 - Letiltja a számokat és speciális karaktereket, csak betűket, szóközöket és kötőjelet engedélyez a név mezőben.
 - Csak számokat, +, - jelet és szóközt engedélyez a telefonsszámnál.
 - Kiszűri a magyar ékezetes betűket és az érvénytelen írásjeleket az emailnel.
