@@ -1,0 +1,2 @@
+2026.10.13
+-Frontend és adatbázis összekötése 1.0 verzió
