@@ -1,0 +1,38 @@
+1. Mit lát egy látogató egy állatról?
+   - Név
+   - Neme
+   - Születési dátum
+   - Életkor (a születési dátumból számolható)
+   - Állat típusa (pl. kutya, macska)
+   - Fajta
+   - Egy vagy több kép az állatról
+   - Súly
+   - Magasság
+   - Mikor került be az állatmenhelyre
+   - Van-e benne chip
+   - Fontos dokumentumok
+   - Megjegyzés
+
+2. Milyen adatokat küld jelenleg a foglalási űrlap?
+   - Látogató neve (visitor_name)
+   - E-mail cím (visitor_email)
+   - Kiválasztott állat (animalselect)
+   - Foglalás dátuma (booking_date)
+   - Foglalás időpontja (booking_time)
+
+   Tervezett további mező:
+   - Telefonszám (a jelenlegi űrlapban még nincs hozzá mező/id)
+
+3. Mire van szüksége a dolgozónak?
+   - Be tudjon jelentkezni a dolgozói felületre
+   - Meg tudja nézni az állatokat
+   - Új állatot tudjon hozzáadni
+   - Meglévő állat adatait tudja módosítani
+   - Állatot tudjon törölni
+   - Meg tudja nézni a beérkezett foglalásokat
+   - A foglalásokat dátum és időpont szerint sorrendben lássa
+   - Lássa, hogy melyik látogató melyik állathoz érkezik
+   - Lássa a látogató nevét és e-mail címét
+   - Ha később hozzáadjuk a telefonszám mezőt, azt is lássa
+   - Lássa a foglalás dátumát és időpontját
+   - Szükség esetén tudja módosítani vagy törölni a foglalást
