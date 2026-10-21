@@ -75,11 +75,11 @@ async function renderExams() {
         tbody.innerHTML = exams.map(exam => `
             <tr>
                 <td>#${exam.id}</td>
-                <td>${exam.allat ? exam.allat.nev : 'Ismeretlen'}</td>
-                <td>${exam.orvos ? exam.orvos.nev : 'Ismeretlen'}</td>
+                <td>${exam.allat ? escapeHtml(exam.allat.nev) : 'Ismeretlen'}</td>
+                <td>${exam.orvos ? escapeHtml(exam.orvos.nev) : 'Ismeretlen'}</td>
                 <td>${exam.orvosi_ido}</td>
-                <td>${exam.betegseg || '-'}</td>
-                <td>${exam.oltas || '-'}</td>
+                <td>${escapeHtml(exam.betegseg || '-')}</td>
+                <td>${escapeHtml(exam.oltas || '-')}</td>
                 <td>
                     ${isAdmin() ? `
                         <button class="btn_small btn_blue" onclick="editExam(${exam.id})">Szerkesztés</button>
@@ -120,15 +120,15 @@ function editExam(id) {
                 <form id="edit_exam_form">
                     <div class="modal_form_group">
                         <label>Betegség</label>
-                        <input type="text" id="e_betegseg" value="${exam.betegseg || ''}">
+                        <input type="text" id="e_betegseg" value="${escapeHtml(exam.betegseg || '')}">
                     </div>
                     <div class="modal_form_group">
                         <label>Oltás</label>
-                        <input type="text" id="e_oltas" value="${exam.oltas || ''}">
+                        <input type="text" id="e_oltas" value="${escapeHtml(exam.oltas || '')}">
                     </div>
                     <div class="modal_form_group">
                         <label>Megjegyzés</label>
-                        <textarea id="e_megjegyzes" rows="3">${exam.megjegyzes || ''}</textarea>
+                        <textarea id="e_megjegyzes" rows="3">${escapeHtml(exam.megjegyzes || '')}</textarea>
                     </div>
                     <div class="modal_actions">
                         <button type="button" class="btn_small btn_red" id="close_exam_modal">Mégse</button>

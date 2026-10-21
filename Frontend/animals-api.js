@@ -92,6 +92,65 @@ function editAnimal(id) {
     if (animal) openAnimalModal(animal);
 }
 
+function animalCardHtml(animal) {
+    const birthDate = animal.szuletesi_datum ? new Date(animal.szuletesi_datum) : null;
+    const age = birthDate
+        ? Math.floor((new Date() - birthDate) / (365.25 * 24 * 60 * 60 * 1000))
+        : null;
+    const kepUrl = animal.kep ? `${PICTURES_BASE_URL}/${animal.kep}` : 'pictures/dog.jpg';
+    const kategoria = { kutya: 'dogs', macska: 'cats' }[(animal.faj || '').toLowerCase()] || 'other';
+
+    return `
+        <div class="animal_card" data-name="${escapeHtml(animal.nev)}" data-species="${escapeHtml(animal.faj)}" data-category="${kategoria}" data-birth="${birthDate ? birthDate.getTime() : 0}">
+            <img src="${kepUrl}" alt="${escapeHtml(animal.nev)}" onerror="this.src='pictures/dog.jpg'">
+            <div class="animal_info">
+                <h3>${escapeHtml(animal.nev)}</h3>
+                <p class="animal_breed">${escapeHtml(animal.fajta || animal.faj)}</p>
+                <p class="animal_age">${age !== null ? age + ' éves' : 'Ismeretlen kor'} • ${animal.nem === 'him' ? 'Hím' : 'Nőstény'}</p>
+                <p class="animal_description">${escapeHtml(animal.leiras || 'Nincs leírás.')}</p>
+                <button class="button adopt_btn" onclick="openAdoptionModalById(${animal.id})">Örökbefogadom</button>
+            </div>
+        </div>
+    `;
+}
+
+// Szűrés és rendezés az adaton (nem a DOM-on), így nem törheti össze a kártyákat
+function applyAnimalFilters() {
+    const track = document.getElementById('animals_grid');
+    if (!track) return;
+
+    const searchTerm = (document.querySelector('.search')?.value || '').toLowerCase();
+    const type = document.getElementById('typefilter')?.value || 'all';
+    const sortType = document.getElementById('sortfilter')?.value || '';
+
+    let list = allatokCache.filter(animal => {
+        const kategoria = { kutya: 'dogs', macska: 'cats' }[(animal.faj || '').toLowerCase()] || 'other';
+        const matchesSearch = (animal.nev || '').toLowerCase().includes(searchTerm);
+        const matchesType = type === 'all' || kategoria === type;
+        return matchesSearch && matchesType;
+    });
+
+    list.sort((a, b) => {
+        const birthA = a.szuletesi_datum ? new Date(a.szuletesi_datum).getTime() : 0;
+        const birthB = b.szuletesi_datum ? new Date(b.szuletesi_datum).getTime() : 0;
+        if (sortType === 'birth_asc') return birthB - birthA;
+        if (sortType === 'birth_desc') return birthA - birthB;
+        if (sortType === 'name_asc') return (a.nev || '').localeCompare(b.nev || '', 'hu');
+        if (sortType === 'name_desc') return (b.nev || '').localeCompare(a.nev || '', 'hu');
+        if (sortType === 'species') return (a.faj || '').localeCompare(b.faj || '', 'hu');
+        return 0;
+    });
+
+    if (list.length === 0) {
+        track.innerHTML = allatokCache.length === 0
+            ? '<p class="no-animals">Jelenleg nincs gazdira váró állat.</p>'
+            : '<p class="no-animals">Nincs a szűrésnek megfelelő állat.</p>';
+        return;
+    }
+
+    track.innerHTML = list.map(animalCardHtml).join('');
+}
+
 async function renderAnimals() {
     const track = document.getElementById('animals_grid');
     if (!track) return;
@@ -101,30 +160,10 @@ async function renderAnimals() {
     const animals = await fetchAnimals();
     allatokCache = animals;
 
-    if (animals.length === 0) {
-        track.innerHTML = '<p class="no-animals">Jelenleg nincs gazdira váró állat.</p>';
-        return;
-    }
+    const retryBtn = document.getElementById('animals_retry');
+    if (retryBtn) retryBtn.hidden = animals.length > 0;
 
-    track.innerHTML = animals.map(animal => {
-        const birthDate = new Date(animal.szuletesi_datum);
-        const age = Math.floor((new Date() - birthDate) / (365.25 * 24 * 60 * 60 * 1000));
-        const kepUrl = animal.kep ? `${PICTURES_BASE_URL}/${animal.kep}` : 'pictures/dog.jpg';
-        const kategoria = { kutya: 'dogs', macska: 'cats' }[(animal.faj || '').toLowerCase()] || 'other';
-
-        return `
-            <div class="animal_card" data-name="${animal.nev}" data-species="${animal.faj}" data-category="${kategoria}" data-birth="${birthDate.getTime()}">
-                <img src="${kepUrl}" alt="${animal.nev}" onerror="this.src='pictures/dog.jpg'">
-                <div class="animal_info">
-                    <h3>${animal.nev}</h3>
-                    <p class="animal_breed">${animal.fajta || animal.faj}</p>
-                    <p class="animal_age">${age} éves • ${animal.nem === 'him' ? 'Hím' : 'Nőstény'}</p>
-                    <p class="animal_description">${animal.leiras || 'Nincs leírás.'}</p>
-                    <button class="button adopt_btn" onclick="openAdoptionModalById(${animal.id})">Örökbefogadom</button>
-                </div>
-            </div>
-        `;
-    }).join('');
+    applyAnimalFilters();
 
     // Állatok feltöltése a foglalás űrlapba
     populateAnimalSelect(animals);
@@ -150,13 +189,13 @@ async function renderAdoptedAnimals() {
         const kepUrl = animal.kep ? `${PICTURES_BASE_URL}/${animal.kep}` : 'pictures/dog.jpg';
 
         return `
-            <div class="animal_card adopted_card" data-name="${animal.nev}">
-                <img src="${kepUrl}" alt="${animal.nev}" onerror="this.src='pictures/dog.jpg'">
+            <div class="animal_card adopted_card" data-name="${escapeHtml(animal.nev)}">
+                <img src="${kepUrl}" alt="${escapeHtml(animal.nev)}" onerror="this.src='pictures/dog.jpg'">
                 <div class="animal_info">
-                    <h3>${animal.nev}</h3>
-                    <p class="animal_breed">${animal.fajta || animal.faj}</p>
+                    <h3>${escapeHtml(animal.nev)}</h3>
+                    <p class="animal_breed">${escapeHtml(animal.fajta || animal.faj)}</p>
                     <p class="animal_age">${age} éves • ${animal.nem === 'him' ? 'Hím' : 'Nőstény'}</p>
-                    <span class="status adopt_badge">Már gazdis</span>
+                    <span class="status adopted adopt_badge">Már gazdis</span>
                 </div>
             </div>
         `;
@@ -182,9 +221,9 @@ async function renderAnimalsAdmin() {
         tbody.innerHTML = animals.map(animal => `
             <tr data-id="${animal.id}">
                 <td>#${animal.id}</td>
-                <td>${animal.nev}</td>
-                <td>${animal.faj}</td>
-                <td>${animal.fajta || '-'}</td>
+                <td>${escapeHtml(animal.nev)}</td>
+                <td>${escapeHtml(animal.faj)}</td>
+                <td>${escapeHtml(animal.fajta || '-')}</td>
                 <td>${animal.szuletesi_datum || '-'}</td>
                 <td>${animal.suly_kg || '-'}</td>
                 <td>${animal.magassag_cm || '-'}</td>
@@ -196,7 +235,7 @@ async function renderAnimalsAdmin() {
                 </td>
                 <td>
                     ${isAdmin() ? `
-                        <button class="btn_small btn_blue">Szerkesztés</button>
+                        <button class="btn_small btn_blue" onclick="editAnimal(${animal.id})">Szerkesztés</button>
                         <button class="btn_small btn_red" onclick="deleteAnimalById(${animal.id})">Törlés</button>
                     ` : '-'}
                 </td>
@@ -205,6 +244,89 @@ async function renderAnimalsAdmin() {
     } catch (error) {
         tbody.innerHTML = '<tr><td colspan="10">Hiba történt a betöltés során.</td></tr>';
     }
+}
+
+// Állat hozzáadása / szerkesztése modal (backend API-val)
+function openAnimalModal(animal = null) {
+    const isEdit = !!animal;
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal_overlay';
+
+    const allapotOpt = (value, label) =>
+        `<option value="${value}" ${animal && animal.allapot === value ? 'selected' : ''}>${label}</option>`;
+
+    modalOverlay.innerHTML = `
+        <div class="modal_content">
+            <h3>🐾 ${isEdit ? escapeHtml(animal.nev) + ' szerkesztése' : 'Új állat hozzáadása'}</h3>
+            <form id="edit_form">
+                <div class="modal_form_group"><label>Név</label><input type="text" id="m_nev" value="${isEdit ? escapeHtml(animal.nev) : ''}" required></div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="modal_form_group" style="flex:1;"><label>Faj</label><input type="text" id="m_faj" value="${isEdit ? escapeHtml(animal.faj) : ''}" placeholder="pl. kutya, macska" required></div>
+                    <div class="modal_form_group" style="flex:1;"><label>Fajta</label><input type="text" id="m_fajta" value="${isEdit ? escapeHtml(animal.fajta || '') : ''}"></div>
+                </div>
+                <div class="modal_form_group"><label>Nem</label><select id="m_nem"><option value="him" ${!animal || animal.nem === 'him' ? 'selected' : ''}>Hím</option><option value="nosteny" ${animal && animal.nem === 'nosteny' ? 'selected' : ''}>Nőstény</option></select></div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="modal_form_group" style="flex:1;"><label>Születési dátum</label><input type="date" id="m_szul" value="${isEdit && animal.szuletesi_datum ? animal.szuletesi_datum : ''}"></div>
+                    <div class="modal_form_group" style="flex:1;"><label>Bekerülés dátuma</label><input type="date" id="m_bekerules" value="${isEdit && animal.bekerules_datuma ? animal.bekerules_datuma : ''}"></div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="modal_form_group" style="flex:1;"><label>Súly (kg)</label><input type="number" step="0.1" min="0" id="m_suly" value="${isEdit && animal.suly_kg !== null ? animal.suly_kg : ''}"></div>
+                    <div class="modal_form_group" style="flex:1;"><label>Magasság (cm)</label><input type="number" min="0" id="m_magassag" value="${isEdit && animal.magassag_cm !== null ? animal.magassag_cm : ''}"></div>
+                </div>
+                <div class="modal_form_group"><label>Mikrochip (Van?)</label><input type="checkbox" id="m_chip" ${!animal || animal.chip ? 'checked' : ''}></div>
+                <div class="modal_form_group"><label>Állapot</label><select id="m_allapot">${allapotOpt('orokbefogadhato', 'Örökbefogadható')}${allapotOpt('kezeles_alatt', 'Kezelés alatt')}${allapotOpt('orokbefogadva', 'Örökbefogadva')}</select></div>
+                <div class="modal_form_group"><label>Kép feltöltése (opcionális)</label><input type="file" id="m_kep" accept="image/jpeg,image/png,image/gif">${isEdit && animal.kep ? `<p class="modal_hint">Jelenlegi kép: ${escapeHtml(animal.kep)}</p>` : ''}</div>
+                <div class="modal_form_group"><label>Leírás</label><textarea id="m_leiras" rows="3">${isEdit ? escapeHtml(animal.leiras || '') : ''}</textarea></div>
+                <div class="modal_actions">
+                    <button type="button" class="btn_small btn_red" id="close_modal">Mégse</button>
+                    <button type="submit" class="btn_small btn_green">Mentés</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    document.body.appendChild(modalOverlay);
+    document.getElementById('close_modal').addEventListener('click', () => modalOverlay.remove());
+
+    document.getElementById('edit_form').addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+
+        const animalData = {
+            nev: document.getElementById('m_nev').value,
+            faj: document.getElementById('m_faj').value,
+            fajta: document.getElementById('m_fajta').value || null,
+            nem: document.getElementById('m_nem').value,
+            szuletesi_datum: document.getElementById('m_szul').value || null,
+            bekerules_datuma: document.getElementById('m_bekerules').value || null,
+            suly_kg: document.getElementById('m_suly').value || null,
+            magassag_cm: document.getElementById('m_magassag').value || null,
+            chip: document.getElementById('m_chip').checked,
+            allapot: document.getElementById('m_allapot').value,
+            leiras: document.getElementById('m_leiras').value || null,
+        };
+
+        const kepFile = document.getElementById('m_kep').files[0];
+
+        try {
+            let allatId;
+            if (isEdit) {
+                await updateAnimal(animal.id, animalData);
+                allatId = animal.id;
+            } else {
+                const result = await createAnimal(animalData);
+                allatId = result.adatok.id;
+            }
+
+            if (kepFile) {
+                await uploadAnimalKep(allatId, kepFile);
+            }
+
+            modalOverlay.remove();
+            renderAnimalsAdmin();
+        } catch (error) {
+            alert('Hiba történt a mentés során: ' + error.message);
+        }
+    });
 }
 
 function populateAnimalSelect(animals) {
@@ -229,4 +351,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (animalsSection) {
         renderAnimalsAdmin();
     }
+
+    // Keresés / szűrés / rendezés a főoldalon
+    const searchInput = document.querySelector('.search');
+    const typeFilter = document.getElementById('typefilter');
+    const sortFilter = document.getElementById('sortfilter');
+    if (searchInput) searchInput.addEventListener('input', applyAnimalFilters);
+    if (typeFilter) typeFilter.addEventListener('change', applyAnimalFilters);
+    if (sortFilter) sortFilter.addEventListener('change', applyAnimalFilters);
+
+    // Újrapróbálás gomb sikertelen betöltés után
+    const retryBtn = document.getElementById('animals_retry');
+    if (retryBtn) retryBtn.addEventListener('click', renderAnimals);
+
+    // "+ Új állat" gomb a felületeken
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn_new_animal')) {
+            openAnimalModal(null);
+        }
+    });
 });

@@ -25,7 +25,7 @@ Konfiguráld az adatbázis kapcsolatot a `.env` fájlban:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=animal_shelter
+DB_DATABASE=allatmenhely
 DB_USERNAME=root
 DB_PASSWORD=
 ```
@@ -38,15 +38,17 @@ php artisan key:generate
 
 ### 4. Adatbázis importálása
 
-A teljes adatbázis (séma + kezdőadatok) a repóban lévő SQL fájlból tölthető be:
+A teljes adatbázis (séma + kezdőadatok) a repóban lévő MySQL dumpból tölthető be:
 
 ```bash
-mysql -u root < "../Adatbase/allatmenhely (1).sql"
+mysql -u root < "../Adatbase/allatmenhely_mysql.sql"
 ```
 
-Vagy phpMyAdminban: **Importálás** → `Adatbase/allatmenhely (1).sql` kiválasztása → **Indítás**.
+Vagy phpMyAdminban: **Importálás** → `Adatbase/allatmenhely_mysql.sql` kiválasztása → **Indítás**.
 
-A dump létrehozza az `animal_shelter` adatbázist az összes táblával és a jelenlegi adatokkal (felhasználók, állatok, orvosok stb.). A `migrations` tábla is benne van, ezért `php artisan migrate` futtatása nem szükséges.
+A dump létrehozza az `allatmenhely` adatbázist az összes táblával (users, allatok, orvosok, vizsgalatok, foglalasok, orokbefogadasok, personal_access_tokens) és a kezdőadatokkal (teszt felhasználók, állatok, orvosok, demo foglalások és örökbefogadások).
+
+> Megjegyzés: az `Adatbase/allatmenhely (1).sql` a régi MSSQL (T-SQL) séma exportja, MySQL-be **nem** importálható – csak referenciaként maradt meg.
 
 ### 6. Szerver indítása
 
@@ -92,19 +94,15 @@ Header: `Authorization: Bearer {token}`
 - `DELETE /api/orokbefogadasok/{id}` - Örökbefogadás törlése
 - `GET /api/orokbefogadasok/allat/{allatId}` - Egy állat örökbefogadási előzményei
 
-### Admin/Dolgozó (hitelesített + jogosultság)
+### Admin/Dolgozó (hitelesített munkatárs)
 
-- `GET /api/allatok/all` - Összes állat listázása (bejelentkezett munkatársaknak)
+Az alábbi műveletek minden bejelentkezett munkatársnak (admin és dolgozó) elérhetők:
+
+- `GET /api/allatok/all` - Összes állat listázása
 - `POST /api/allatok` - Új állat hozzáadása
 - `PUT /api/allatok/{id}` - Állat módosítása
 - `DELETE /api/allatok/{id}` - Állat törlése
 - `POST /api/allatok/{id}/kep` - Kép feltöltése (multipart/form-data)
-
-- `GET /api/users` - Dolgozók listázása (admin only)
-- `POST /api/users` - Új dolgozó hozzáadása (admin only)
-- `GET /api/users/{id}` - Egy dolgozó részletei (admin only)
-- `PUT /api/users/{id}` - Dolgozó módosítása (admin only)
-- `DELETE /api/users/{id}` - Dolgozó törlése (admin only)
 
 - `GET /api/vizsgalatok` - Vizsgálatok listázása
 - `GET /api/vizsgalatok/{id}` - Egy vizsgálat részletei
@@ -118,6 +116,14 @@ Header: `Authorization: Bearer {token}`
 - `GET /api/orvosok/{id}` - Egy orvos részletei
 - `PUT /api/orvosok/{id}` - Orvos módosítása
 - `DELETE /api/orvosok/{id}` - Orvos törlése
+
+### Csak admin
+
+- `GET /api/users` - Dolgozók listázása
+- `POST /api/users` - Új dolgozó hozzáadása
+- `GET /api/users/{id}` - Egy dolgozó részletei
+- `PUT /api/users/{id}` - Dolgozó módosítása
+- `DELETE /api/users/{id}` - Dolgozó törlése (saját fiók nem törölhető)
 
 ## Teszt Felhasználók
 
@@ -187,6 +193,11 @@ A képek a `public/pictures` mappában vannak tárolva. Kép feltöltés a `/api
 - Admin: Minden művelet elérhető, beleértve a dolgozók kezelését
 - Dolgozó: CRUD műveletek állatokon, foglalásokon, örökbefogadásokon, vizsgálatokon és orvosokon; a dolgozók kezelése (listázás, létrehozás, módosítás, törlés) admin-only
 
+### Üzleti szabályok
+- Foglalás és örökbefogadás csak `orokbefogadhato` állapotú állathoz hozható létre.
+- Örökbefogadás elfogadásakor az állat `orokbefogadva` lesz, a többi függő kérelem ugyanarra az állatra automatikusan `elutasitva`.
+- Ha az elfogadott örökbefogadás státusza visszamódosul, az állat állapota visszaáll `orokbefogadhato`-ra.
+
 ## Hibaelhárítás
 
 ### Adatbázis kapcsolat hiba
@@ -196,7 +207,7 @@ Ellenőrizd a `.env` fájlban az adatbázis beállításokat, és hogy a MySQL s
 Ha az adatbázist alaphelyzetbe akarod állítani, importáld újra az SQL dumpot:
 
 ```bash
-mysql -u root < "../Adatbase/allatmenhely (1).sql"
+mysql -u root < "../Adatbase/allatmenhely_mysql.sql"
 ```
 
 ### CORS hiba

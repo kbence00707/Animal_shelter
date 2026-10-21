@@ -77,7 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 await login(email, password);
             } catch (error) {
-                alert(error.message || 'Hiba történt a bejelentkezés során.');
+                const message = document.getElementById('login_message');
+                if (message) {
+                    message.textContent = error.message || 'Hiba történt a bejelentkezés során.';
+                    message.style.color = 'red';
+                } else {
+                    alert(error.message || 'Hiba történt a bejelentkezés során.');
+                }
             }
         });
     }

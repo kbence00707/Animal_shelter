@@ -82,12 +82,16 @@ class UserController extends Controller
         return $this->valasz(['uzenet' => 'Dolgozó sikeresen frissítve.', 'adatok' => $user]);
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(Request $request, string $id): JsonResponse
     {
         $user = User::find($id);
 
         if (!$user) {
             return $this->valasz(['hiba' => 'A dolgozó nem található.'], 404);
+        }
+
+        if ($request->user() && $request->user()->id === $user->id) {
+            return $this->valasz(['hiba' => 'Saját fiókodat nem törölheted.'], 403);
         }
 
         $user->delete();

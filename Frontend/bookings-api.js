@@ -64,10 +64,10 @@ async function renderBookings() {
 
         tbody.innerHTML = bookings.map(booking => `
             <tr>
-                <td>${booking.latogato_nev}</td>
-                <td>${booking.email}</td>
-                <td>${booking.telefonszam}</td>
-                <td>${booking.allat ? booking.allat.nev : 'Ismeretlen'}</td>
+                <td>${escapeHtml(booking.latogato_nev)}</td>
+                <td>${escapeHtml(booking.email)}</td>
+                <td>${escapeHtml(booking.telefonszam)}</td>
+                <td>${booking.allat ? escapeHtml(booking.allat.nev) : 'Ismeretlen'}</td>
                 <td>${booking.datum}</td>
                 <td>${booking.idopont ? booking.idopont.substring(0, 5) : '-'}</td>
                 <td>
@@ -76,7 +76,7 @@ async function renderBookings() {
                     </span>
                 </td>
                 <td>
-                    ${isAdmin() ? `
+                    ${isLoggedIn() ? `
                         <button class="btn_small btn_green" onclick="acceptBooking(${booking.id})">Elfogadás</button>
                         <button class="btn_small btn_red" onclick="rejectBooking(${booking.id})">Elutasítás</button>
                     ` : '-'}
@@ -142,13 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
         bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            const timeSelect = document.getElementById('booking_time');
             const bookingData = {
                 latogato_nev: document.getElementById('visitor_name').value,
                 email: document.getElementById('visitor_email').value,
                 telefonszam: document.getElementById('visitor_phone').value,
                 allat_id: document.getElementById('animalselect').value,
                 datum: document.getElementById('booking_date').value,
-                idopont: '10:00', // Alapértelmezett időpont, később bővíthető
+                idopont: timeSelect ? timeSelect.value : '10:00',
             };
 
             try {

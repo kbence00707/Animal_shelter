@@ -4,17 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vezetőségi Felület - Állatmenhely</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20261021">
+    <script src="theme.js?v=20261021"></script>
 </head>
 <body class="dashboard_body">
     <div class="dashboard_wrapper">
         <aside class="sidebar">
             <h2>Állatmenhely</h2>
             <p class="role_badge admin_badge">Vezetőségi fiók</p>
+            <p id="user_name" class="user_name"></p>
             <nav class="sidebar_nav">
-                <button class="nav_btn active" onclick="showTab('appointments')">📅 Időpontok</button>
-                <button class="nav_btn" onclick="showTab('animals')">🐾 Állatok</button>
-                <button class="nav_btn" onclick="showTab('employees')">👥 Dolgozók</button>
+                <button class="nav_btn active" onclick="showTab('appointments', this)">📅 Időpontok</button>
+                <button class="nav_btn" onclick="showTab('adoptions', this)">🏠 Örökbefogadások</button>
+                <button class="nav_btn" onclick="showTab('animals', this)">🐾 Állatok</button>
+                <button class="nav_btn" onclick="showTab('exams', this)">🏥 Vizsgálatok</button>
+                <button class="nav_btn" onclick="showTab('vets', this)">👨‍⚕️ Orvosok</button>
+                <button class="nav_btn" onclick="showTab('employees', this)">👥 Dolgozók</button>
+                <button class="nav_btn" id="theme_toggle">🌙 Sötét mód</button>
                 <a href="login.html" class="nav_link logout">Kijelentkezés</a>
             </nav>
         </aside>
@@ -24,23 +30,51 @@
                 <div class="content_header">
                     <h2>Látogatási foglalások</h2>
                 </div>
-                <table class="data_table">
-                    <thead>
-                        <tr>
-                            <th>Név</th>
-                            <th>Foglalás napja</th>
-                            <th>Állat ID</th>
-                            <th>Státusz</th>
-                            <th>Művelet</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div style="overflow-x: auto;">
+                    <table class="data_table">
+                        <thead>
+                            <tr>
+                                <th>Név</th>
+                                <th>E-mail</th>
+                                <th>Telefon</th>
+                                <th>Állat</th>
+                                <th>Dátum</th>
+                                <th>Időpont</th>
+                                <th>Státusz</th>
+                                <th>Művelet</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="adoptions" class="tab_content">
+                <div class="content_header">
+                    <h2>Örökbefogadási kérelmek</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data_table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Név</th>
+                                <th>E-mail</th>
+                                <th>Telefon</th>
+                                <th>Állat</th>
+                                <th>Dátum</th>
+                                <th>Státusz</th>
+                                <th>Művelet</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </section>
 
             <section id="animals" class="tab_content">
                 <div class="content_header">
-                    <h2>Állatok kezelése (SQL mezők)</h2>
+                    <h2>Állatok kezelése</h2>
                     <button class="button btn_new_animal">+ Új állat</button>
                 </div>
                 <div style="overflow-x: auto;">
@@ -49,13 +83,56 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Név</th>
-                                <th>Szín</th>
+                                <th>Faj</th>
                                 <th>Fajta</th>
-                                <th>Kor (kb. év)</th>
+                                <th>Szül. dátum</th>
                                 <th>Súly (kg)</th>
                                 <th>Mag. (cm)</th>
-                                <th>Gondozó ID</th>
+                                <th>Chip</th>
                                 <th>Státusz</th>
+                                <th>Művelet</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="exams" class="tab_content">
+                <div class="content_header">
+                    <h2>Orvosi vizsgálatok</h2>
+                    <button class="button" onclick="openNewExamModal()">+ Új vizsgálat</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data_table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Állat</th>
+                                <th>Orvos</th>
+                                <th>Dátum</th>
+                                <th>Betegség</th>
+                                <th>Oltás</th>
+                                <th>Művelet</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="vets" class="tab_content">
+                <div class="content_header">
+                    <h2>Orvosok</h2>
+                    <button class="button" onclick="openNewVetModal()">+ Új orvos</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data_table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Név</th>
+                                <th>Rögzítve</th>
                                 <th>Művelet</th>
                             </tr>
                         </thead>
@@ -69,22 +146,32 @@
                     <h2>Dolgozók Kezelése</h2>
                     <button class="button btn_new_employee">+ Új dolgozó</button>
                 </div>
-                <table class="data_table">
-                    <thead>
-                        <tr>
-                            <th>Név</th>
-                            <th>E-mail</th>
-                            <th>Telefon</th>
-                            <th>Dolgozó ID</th>
-                            <th>Jogosultság</th>
-                            <th>Művelet</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div style="overflow-x: auto;">
+                    <table class="data_table">
+                        <thead>
+                            <tr>
+                                <th>Név</th>
+                                <th>E-mail</th>
+                                <th>Telefon</th>
+                                <th>Dolgozó ID</th>
+                                <th>Jogosultság</th>
+                                <th>Művelet</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </section>
         </main>
     </div>
-    <script src="script.js"></script>
+    <script src="api-config.js?v=20261021"></script>
+    <script src="auth-api.js?v=20261021"></script>
+    <script src="animals-api.js?v=20261021"></script>
+    <script src="bookings-api.js?v=20261021"></script>
+    <script src="adoptions-api.js?v=20261021"></script>
+    <script src="users-api.js?v=20261021"></script>
+    <script src="vets-api.js?v=20261021"></script>
+    <script src="exams-api.js?v=20261021"></script>
+    <script src="script.js?v=20261021"></script>
 </body>
 </html>

@@ -40,12 +40,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orvosok', [OrvosController::class, 'index']);
     Route::get('/orvosok/{id}', [OrvosController::class, 'show']);
 
-    // Módosítások és törlések - csak admin
-    Route::middleware('admin')->group(function () {
-        Route::put('/foglalasok/{id}', [FoglalasController::class, 'update']);
-        Route::delete('/foglalasok/{id}', [FoglalasController::class, 'destroy']);
+    // Státusz módosítása - minden bejelentkezett munkatárs (admin és dolgozó)
+    Route::put('/foglalasok/{id}', [FoglalasController::class, 'update']);
+    Route::put('/orokbefogadasok/{id}', [OrokbefogadasController::class, 'update']);
 
-        Route::put('/orokbefogadasok/{id}', [OrokbefogadasController::class, 'update']);
+    // Létrehozás, módosítás és törlés - csak admin
+    Route::middleware('admin')->group(function () {
+        Route::delete('/foglalasok/{id}', [FoglalasController::class, 'destroy']);
         Route::delete('/orokbefogadasok/{id}', [OrokbefogadasController::class, 'destroy']);
 
         Route::post('/allatok', [AllatController::class, 'store']);

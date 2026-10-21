@@ -30,8 +30,27 @@ class Orokbefogadas extends Model
         parent::boot();
 
         static::updated(function ($orokbefogadas) {
-            if ($orokbefogadas->statusz === 'elfogadva' && $orokbefogadas->allat) {
+            if (!$orokbefogadas->wasChanged('statusz') || !$orokbefogadas->allat) {
+                return;
+            }
+
+            if ($orokbefogadas->statusz === 'elfogadva') {
                 $orokbefogadas->allat->update(['allapot' => 'orokbefogadva']);
+
+                // A többi függő örökbefogadási kérelmet ugyanarra az állatra elutasítjuk.
+                static::where('allat_id', $orokbefogadas->allat_id)
+                    ->where('id', '!=', $orokbefogadas->id)
+                    ->where('statusz', 'fuggoben')
+                    ->update(['statusz' => 'elutasitva']);
+            } elseif ($orokbefogadas->getOriginal('statusz') === 'elfogadva') {
+                $masElfogadott = static::where('allat_id', $orokbefogadas->allat_id)
+                    ->where('id', '!=', $orokbefogadas->id)
+                    ->where('statusz', 'elfogadva')
+                    ->exists();
+
+                if (!$masElfogadott) {
+                    $orokbefogadas->allat->update(['allapot' => 'orokbefogadhato']);
+                }
             }
         });
     }

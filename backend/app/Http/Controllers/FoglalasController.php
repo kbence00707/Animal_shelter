@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Allat;
 use App\Models\Foglalas;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,6 +44,11 @@ class FoglalasController extends Controller
             'idopont.required' => 'Az időpont megadása kötelező.',
             'idopont.date_format' => 'Érvénytelen időpont formátum.',
         ]);
+
+        $allat = Allat::find($request->allat_id);
+        if ($allat->allapot !== 'orokbefogadhato') {
+            return $this->valasz(['hiba' => 'A kiválasztott állat jelenleg nem örökbefogadható.'], 422);
+        }
 
         $foglalas = Foglalas::create($request->all());
 

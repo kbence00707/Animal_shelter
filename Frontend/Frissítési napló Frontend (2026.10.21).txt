@@ -1,0 +1,35 @@
+2026.10.21
+- Frontend és backend teljes összekötése (API integráció minden oldalon)
+
+Backend:
+- A módosító route-ok (foglalasok, orokbefogadasok, allatok, vizsgalatok,
+  orvosok) mostantól minden bejelentkezett munkatársnak elérhetők;
+  a /users végpontok továbbra is admin-only.
+- Foglalás és örökbefogadás csak 'orokbefogadhato' állapotú állathoz hozható létre.
+- Örökbefogadás elfogadásakor az állat automatikusan 'orokbefogadva' lesz,
+  a többi függő kérelem elutasításra kerül; visszavonásnál az állapot visszaáll.
+- Saját felhasználói fiók törlése letiltva.
+- Új Adatbase/allatmenhely_mysql.sql: teljes MySQL séma + kezdőadatok
+  (a régi dump MSSQL-hez készült, nem volt importálható).
+
+Frontend:
+- admin.html: új fülek – Örökbefogadások, Vizsgálatok, Orvosok;
+  javított táblázat-fejlécek; bejelentkezett felhasználó neve a sidebarban;
+  minden API-modul betöltve.
+- worker.html: ugyanaz a felület Dolgozók fül nélkül.
+- index.html: foglalás és örökbefogadás űrlap bekötve az API-ra,
+  időpont választó, új "Sikeres örökbefogadások" szekció.
+- login.html: valódi bejelentkezés az API-n keresztül, demo linkek törölve.
+- script.js: demo/DOM-alapú logika eltávolítva; az állat- és dolgozó-modálok
+  az API-fájlokba kerültek (képfeltöltés és jelszó mező támogatással).
+- style.css: hiányzó osztályok pótolva (animal_info, adopt_badge,
+  status.adopted, message, stb.).
+
+Javítások (2. kör):
+- Az állat-szűrés/rendezés a DOM-on babrálás helyett az adaton fut
+  (animals-api.js applyAnimalFilters) – a kártyák nem tűnnek el többé.
+- A csúszka-nyilak a kártyákon kívülre kerültek (wrapper padding).
+- Az "Örökbefogadom" gomb középre igazítva, nem a kártya szélén.
+- Működő sötét mód: a theme.js be lett kötve minden oldalra,
+  sötét CSS felületek írva (főoldal, login, admin, dolgozói);
+  a kapcsoló a "Bejelentkezés" mellé, a felületeken a sidebarba került.

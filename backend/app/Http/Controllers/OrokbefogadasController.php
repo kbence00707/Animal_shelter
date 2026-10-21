@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Allat;
 use App\Models\Orokbefogadas;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,6 +41,11 @@ class OrokbefogadasController extends Controller
             'fogadas_datum.date' => 'Érvénytelen dátum.',
             'fogadas_datum.after_or_equal' => 'Az örökbefogadás dátuma nem lehet múltbéli.',
         ]);
+
+        $allat = Allat::find($request->allat_id);
+        if ($allat->allapot !== 'orokbefogadhato') {
+            return $this->valasz(['hiba' => 'A kiválasztott állat jelenleg nem örökbefogadható.'], 422);
+        }
 
         $orokbefogadas = Orokbefogadas::create($request->all());
 

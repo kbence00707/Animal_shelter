@@ -62,7 +62,7 @@ function openAdoptionModal(animal) {
 
     modalOverlay.innerHTML = `
         <div class="modal_content">
-            <h3>🏠 ${animal.nev} örökbefogadása</h3>
+            <h3>🏠 ${escapeHtml(animal.nev)} örökbefogadása</h3>
             <form id="adoption_form">
                 <div class="modal_form_group">
                     <label>Név</label>
@@ -147,10 +147,10 @@ async function renderAdoptions() {
         tbody.innerHTML = adoptions.map(adoption => `
             <tr>
                 <td>#${adoption.id}</td>
-                <td>${adoption.latogato_nev}</td>
-                <td>${adoption.email || '-'}</td>
-                <td>${adoption.telefonszam || '-'}</td>
-                <td>${adoption.allat ? adoption.allat.nev : 'Ismeretlen'}</td>
+                <td>${escapeHtml(adoption.latogato_nev)}</td>
+                <td>${escapeHtml(adoption.email || '-')}</td>
+                <td>${escapeHtml(adoption.telefonszam || '-')}</td>
+                <td>${adoption.allat ? escapeHtml(adoption.allat.nev) : 'Ismeretlen'}</td>
                 <td>${adoption.fogadas_datum}</td>
                 <td>
                     <span class="status ${getStatusClass(adoption.statusz)}">
@@ -158,7 +158,7 @@ async function renderAdoptions() {
                     </span>
                 </td>
                 <td>
-                    ${isAdmin() ? `
+                    ${isLoggedIn() ? `
                         <button class="btn_small btn_green" onclick="acceptAdoption(${adoption.id})">Elfogadás</button>
                         <button class="btn_small btn_red" onclick="rejectAdoption(${adoption.id})">Elutasítás</button>
                     ` : '-'}

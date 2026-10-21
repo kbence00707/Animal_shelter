@@ -65,7 +65,7 @@ async function renderVets() {
         tbody.innerHTML = vets.map(vet => `
             <tr>
                 <td>#${vet.id}</td>
-                <td>${vet.nev}</td>
+                <td>${escapeHtml(vet.nev)}</td>
                 <td>${new Date(vet.created_at).toLocaleDateString('hu-HU')}</td>
                 <td>
                     ${isAdmin() ? `
@@ -103,11 +103,11 @@ function editVet(id) {
 
         modalOverlay.innerHTML = `
             <div class="modal_content">
-                <h3>👨‍⚕️ ${vet.nev} szerkesztése</h3>
+                <h3>👨‍⚕️ ${escapeHtml(vet.nev)} szerkesztése</h3>
                 <form id="edit_vet_form">
                     <div class="modal_form_group">
                         <label>Név</label>
-                        <input type="text" id="v_nev" value="${vet.nev}" required>
+                        <input type="text" id="v_nev" value="${escapeHtml(vet.nev)}" required>
                     </div>
                     <div class="modal_actions">
                         <button type="button" class="btn_small btn_red" id="close_vet_modal">Mégse</button>

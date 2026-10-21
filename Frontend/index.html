@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Állatmenhely</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20261021">
+    <script src="theme.js?v=20261021"></script>
 </head>
 <body>
     <header>
@@ -17,6 +18,7 @@
                 <a href="#time">Időpontfoglalás</a>
                 <a href="#contact">Kapcsolat</a>
                 <a href="login.html">Bejelentkezés</a>
+                <button id="theme_toggle" class="theme_toggle" title="Sötét mód">🌙</button>
             </nav>
         </div>
     </header>
@@ -74,12 +76,24 @@
             </div>
         </section>
 
+        <section id="adopted" class="animals">
+            <div class="animals_container">
+                <div class="container_title">
+                    <div>
+                        <span class="animals_container_header">Boldog történetek</span>
+                        <h2>Sikeres örökbefogadások</h2>
+                    </div>
+                </div>
+                <div id="adopted_grid" class="animals_slider_track" role="status" aria-live="polite">Állatok betöltése…</div>
+            </div>
+        </section>
+
         <section id="time" class="time_container_light">
             <div class="time_container_layout">
                 <div class="meeting_text">
                     <span class="meeting_title">Személyes találkozó</span>
                     <h2>Időpontfoglalás</h2>
-                    <p>Válaszd ki a számodra megfelelő időpontot és azt a kiskedvencet, akivel szeretnél találkozni. A foglalás napját kérheted; a végleges időpontot munkatársaink egyeztetik. A bemutató verzió nem küld valódi foglalást a menhelynek.</p>
+                    <p>Válaszd ki a számodra megfelelő időpontot és azt a kiskedvencet, akivel szeretnél találkozni. A foglalást munkatársaink jóváhagyás után véglegesítik.</p>
                 </div>
                 <form id="booking" class="booking_form">
                     <label>Név <input id="visitor_name" type="text" placeholder="pl. Kiss János" required></label>
@@ -92,6 +106,18 @@
                     </label>
                     <div class="column_two">
                         <label>Dátum <input id="booking_date" type="date" required></label>
+                        <label>Időpont
+                            <select id="booking_time" required>
+                                <option value="08:00">08:00</option>
+                                <option value="09:00">09:00</option>
+                                <option value="10:00" selected>10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="15:00">15:00</option>
+                            </select>
+                        </label>
                     </div>
                     <button class="button" type="submit">Időpont lefoglalása</button>
                     <p id="booking_message" class="message"></p>
@@ -120,8 +146,10 @@
         </div>
     </footer>
 
-    <script src="api-config.js"></script>
-    <script src="script.js"></script>
-    <script src="animals-api.js"></script>
+    <script src="api-config.js?v=20261021"></script>
+    <script src="animals-api.js?v=20261021"></script>
+    <script src="adoptions-api.js?v=20261021"></script>
+    <script src="bookings-api.js?v=20261021"></script>
+    <script src="script.js?v=20261021"></script>
 </body>
 </html>

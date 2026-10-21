@@ -46,13 +46,24 @@ async function apiCall(endpoint, options = {}) {
     return response.json();
 }
 
+// HTML-escape segédfüggvény a felhasználói adatok biztonságos megjelenítéséhez
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // Állapot kezelés segédfüggvények
 function getStatusClass(status) {
     switch (status) {
         case 'elfogadva': return 'active';
         case 'elutasitva': return 'rejected';
         case 'orokbefogadhato': return 'active';
-        case 'orokbefogadva': return 'rejected';
+        case 'orokbefogadva': return 'adopted';
         default: return 'pending';
     }
 }
